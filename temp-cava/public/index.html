@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!--
+      =============================================================================
+      File: public/index.html
+      Project: JARA (Advanced Todo List & Collaboration System)
+      Role: (PM) Landing Page / Halaman Utama Aplikasi
+      -----------------------------------------------------------------------------
+      Deskripsi:
+      Halaman utama portal JARA yang mengintegrasikan ketiga modul fungsional:
+      - SRS-01: Admin & User Management
+      - SRS-02: Task & Project Management
+      - SRS-03: Collaboration & Progress Tracking
+      =============================================================================
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARA - Advanced Todo List & Collaboration Platform</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="../config/connection.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <style>
+        .hero-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #06b6d4 100%);
+            color: #ffffff;
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        .hero-banner h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+        .hero-banner p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 700px;
+        }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .module-card {
+            border-top: 4px solid var(--color-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .module-card.admin { border-top-color: #10b981; }
+        .module-card.task { border-top-color: #3b82f6; }
+        .module-card.collab { border-top-color: #f59e0b; }
+        .module-meta {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+        .quick-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <header class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span style="font-size: 1.5rem;">⚡</span>
+            <span>JARA App</span>
+            <span class="badge-tag">v1.0.0</span>
+        </a>
+        <nav>
+            <ul class="navbar-menu">
+                <li><a href="#" data-nav-target="overview" class="active">Overview</a></li>
+                <li><a href="../modules/admin/admin-view.html">Modul Admin (SRS-01)</a></li>
+                <li><a href="../modules/task/task-view.html">Modul Task (SRS-02)</a></li>
+                <li><a href="../modules/collaboration/collab-view.html">Modul Kolaborasi (SRS-03)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-title">Menu Utama</div>
+            <nav class="sidebar-nav">
+                <a href="#" data-nav-target="overview" class="active">
+                    <span>📊</span> Dashboard Overview
+                </a>
+                <a href="../modules/admin/admin-view.html">
+                    <span>👥</span> User & Admin (SRS-01)
+                </a>
+                <a href="../modules/task/task-view.html">
+                    <span>📋</span> Task & Priority (SRS-02)
+                </a>
+                <a href="../modules/collaboration/collab-view.html">
+                    <span>🤝</span> Kolaborasi Tim (SRS-03)
+                </a>
+            </aside>
+
+            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <div class="sidebar-title">Tim Pengembang</div>
+            <div style="font-size: 0.85rem; color: var(--color-text-muted); display: flex; flex-direction: column; gap: 0.5rem;">
+                <div>🟢 <b>Programmer 1:</b> SRS-01 Admin</div>
+                <div>🔵 <b>Programmer 2:</b> SRS-02 Task</div>
+                <div>🟡 <b>Programmer 3:</b> SRS-03 Collab</div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="app-main">
+            
+            <!-- Hero Banner -->
+            <section class="hero-banner">
+                <h1>Selamat Datang di JARA</h1>
+                <p>Platform Manajemen Tugas Kolaboratif Modern dengan Arsitektur Modular, Terintegrasi dengan Laravel Framework.</p>
+            </section>
+
+            <!-- Modul SRS Grid Overview -->
+            <section class="module-grid">
+                
+                <!-- Card Modul SRS-01 -->
+                <article class="card module-card admin">
+                    <div>
+                        <div class="card-header" style="border: none; padding-bottom: 0;">
+                            <h3 class="card-title">SRS-01: Admin & User</h3>
+                            <span class="badge badge-success">Programmer 1</span>
+                        </div>
+                        <div class="module-meta">
+                            <span class="badge badge-info">feature/srs-01-admin-user</span>
+                        </div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Memungkinkan Admin untuk membuat/menambah akun baru, mengelola peran, dan menghapus akun pengguna dari sistem.
+                        </p>
+                    </div>
+                    <div class="quick-links">
+                        <a href="../modules/admin/admin-view.html" class="btn btn-primary btn-sm">Buka Modul Admin &rarr;</a>
+                    </div>
+                </article>
+
+                <!-- Card Modul SRS-02 -->
+                <article class="card module-card task">
+                    <div>
+                        <div class="card-header" style="border: none; padding-bottom: 0;">
+                            <h3 class="card-title">SRS-02: Task & Project</h3>
+                            <span class="badge badge-info">Programmer 2</span>
+                        </div>
+                        <div class="module-meta">
+                            <span class="badge badge-info">feature/srs-02-task-management</span>
+                        </div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Pengguna dapat membuat daftar tugas (project/list), mengatur prioritas, menetapkan tenggat waktu (deadline), dan menandai status selesai.
+                        </p>
+                    </div>
+                    <div class="quick-links">
+                        <a href="../modules/task/task-view.html" class="btn btn-primary btn-sm">Buka Modul Task &rarr;</a>
+                    </div>
+                </article>
+
+                <!-- Card Modul SRS-03 -->
+                <article class="card module-card collab">
+                    <div>
+                        <div class="card-header" style="border: none; padding-bottom: 0;">
+                            <h3 class="card-title">SRS-03: Collaboration</h3>
+                            <span class="badge badge-warning">Programmer 3</span>
+                        </div>
+                        <div class="module-meta">
+                            <span class="badge badge-info">feature/srs-03-collaboration</span>
+                        </div>
+                        <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                            Pemilik daftar dapat mengundang anggota ke daftar tugas bersama serta memantau persentase dan progres penyelesaian secara real-time.
+                        </p>
+                    </div>
+                    <div class="quick-links">
+                        <a href="../modules/collaboration/collab-view.html" class="btn btn-primary btn-sm">Buka Modul Kolaborasi &rarr;</a>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- Project Progress Bar Component -->
+            <section class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Status Keseluruhan Proyek</h3>
+                    <span class="badge badge-info" id="overall-progress-text">Progres: 65%</span>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Pemantauan terpadu untuk ketiga modul fungsional dalam arsitektur repositori.
+                </p>
+                <div class="progress-container">
+                    <div class="progress-bar-fill" style="width: 65%;"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        &copy; 2026 JARA App - Praktikum Rekayasa Perangkat Lunak & Sistem Registrasi. All rights reserved.
+    </footer>
+
+</body>
+</html>
