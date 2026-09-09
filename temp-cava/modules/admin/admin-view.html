@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!--
+      =============================================================================
+      File: modules/admin/admin-view.html
+      Module: SRS-01 Admin & User Management
+      Programmer: Programmer 1
+      Branch: feature/srs-01-admin-user
+      -----------------------------------------------------------------------------
+      Deskripsi:
+      Antarmuka pengguna (UI) bagi Administrator untuk:
+      - Menampilkan ringkasan statistik pengguna
+      - Melihat tabel daftar seluruh pengguna
+      - Menambah pengguna/akun baru melalui modal form interaktif
+      - Mengubah role pengguna (Admin/Member)
+      - Menghapus akun pengguna dari sistem
+      =============================================================================
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARA - Admin & User Management (SRS-01)</title>
+    <!-- Global Styling & Config -->
+    <link rel="stylesheet" href="../../public/css/global.css">
+    <!-- Module Styling -->
+    <link rel="stylesheet" href="admin.css">
+    <script src="../../config/connection.js" defer></script>
+    <script src="../../public/js/app.js" defer></script>
+    <script src="admin-script.js" defer></script>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="../../public/index.html" class="navbar-brand">
+            <span style="font-size: 1.5rem;">⚡</span>
+            <span>JARA App</span>
+            <span class="badge badge-success">SRS-01: Admin</span>
+        </a>
+        <nav>
+            <ul class="navbar-menu">
+                <li><a href="../../public/index.html">&larr; Kembali ke Dashboard Utama</a></li>
+                <li><a href="admin-view.html" class="active">Manajemen User</a></li>
+                <li><a href="../task/task-view.html">Modul Task</a></li>
+                <li><a href="../collaboration/collab-view.html">Modul Kolaborasi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Layout Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <div class="sidebar-title">Modul SRS-01</div>
+            <nav class="sidebar-nav">
+                <a href="admin-view.html" class="active">
+                    <span>👥</span> Kelola Pengguna
+                </a>
+                <a href="#">
+                    <span>🛡️</span> Kebijakan & Role
+                </a>
+                <a href="#">
+                    <span>📜</span> Log Aktivitas Akun
+                </a>
+            </nav>
+
+            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <div class="sidebar-title">Informasi Pengembang</div>
+            <div style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4;">
+                <p><b>Penanggung Jawab:</b><br>Programmer 1</p>
+                <p style="margin-top: 0.5rem;"><b>Git Branch:</b><br><code>feature/srs-01-admin-user</code></p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            
+            <!-- Page Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="font-size: 1.75rem; font-weight: 700;">Manajemen Pengguna & Akun</h1>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem;">Kelola seluruh hak akses, pendaftaran akun baru, dan pemeliharaan akun pengguna sistem.</p>
+                </div>
+                <button id="btn-open-modal" class="btn btn-primary">
+                    <span>+</span> Tambah Pengguna Baru
+                </button>
+            </div>
+
+            <!-- Stats Bar -->
+            <section class="admin-stats-grid">
+                <div class="stat-box">
+                    <div class="stat-icon">👥</div>
+                    <div>
+                        <div class="stat-number" id="stat-total-users">0</div>
+                        <div class="stat-label">Total Akun Terdaftar</div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon" style="background: #dcfce7; color: #166534;">🛡️</div>
+                    <div>
+                        <div class="stat-number" id="stat-total-admins">0</div>
+                        <div class="stat-label">Administrator</div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon" style="background: #e0f2fe; color: #0284c7;">👤</div>
+                    <div>
+                        <div class="stat-number" id="stat-total-members">0</div>
+                        <div class="stat-label">Pengguna Reguler</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Table Card -->
+            <section class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Daftar Pengguna Aktif</h3>
+                    <input type="text" id="user-search" class="form-control" placeholder="Cari nama atau email..." style="width: 250px;">
+                </div>
+
+                <div class="table-responsive">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Pengguna</th>
+                                <th>Role / Hak Akses</th>
+                                <th>Status</th>
+                                <th>Tanggal Bergabung</th>
+                                <th style="text-align: right;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <!-- Populated dynamically by admin-script.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal Form Tambah Pengguna -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-weight: 700; font-size: 1.15rem;">Tambah Akun Pengguna Baru</h3>
+                <button id="btn-close-modal" style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">&times;</button>
+            </div>
+            <form id="form-create-user">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="input-name">Nama Lengkap</label>
+                        <input type="text" id="input-name" class="form-control" placeholder="Contoh: Budi Santoso" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-email">Alamat Email</label>
+                        <input type="email" id="input-email" class="form-control" placeholder="budi@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-role">Peran / Role</label>
+                        <select id="input-role" class="form-control">
+                            <option value="member">Pengguna / Member</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-password">Kata Sandi Default</label>
+                        <input type="password" id="input-password" class="form-control" placeholder="Minimal 8 karakter" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-cancel-modal" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Pengguna</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
