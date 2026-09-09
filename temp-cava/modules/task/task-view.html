@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!--
+      =============================================================================
+      File: modules/task/task-view.html
+      Module: SRS-02 Task & Project Management
+      Programmer: Programmer 2
+      Branch: feature/srs-02-task-management
+      -----------------------------------------------------------------------------
+      Deskripsi:
+      Antarmuka pengguna (UI) bagi Pengguna untuk:
+      - Menampilkan dan memilih daftar tugas (Project / List)
+      - Membuat tugas baru dengan deskripsi, prioritas, dan tanggal deadline
+      - Memfilter tugas (Semua, Aktif, Selesai)
+      - Menandai tugas sebagai selesai (check toggle)
+      - Mengedit dan menghapus tugas
+      =============================================================================
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARA - Task & Project Management (SRS-02)</title>
+    <!-- Global Styling & Config -->
+    <link rel="stylesheet" href="../../public/css/global.css">
+    <!-- Module Styling -->
+    <link rel="stylesheet" href="task.css">
+    <script src="../../config/connection.js" defer></script>
+    <script src="../../public/js/app.js" defer></script>
+    <script src="task-script.js" defer></script>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="../../public/index.html" class="navbar-brand">
+            <span style="font-size: 1.5rem;">⚡</span>
+            <span>JARA App</span>
+            <span class="badge badge-info">SRS-02: Task</span>
+        </a>
+        <nav>
+            <ul class="navbar-menu">
+                <li><a href="../../public/index.html">&larr; Kembali ke Dashboard Utama</a></li>
+                <li><a href="../admin/admin-view.html">Modul Admin</a></li>
+                <li><a href="task-view.html" class="active">Daftar Tugas</a></li>
+                <li><a href="../collaboration/collab-view.html">Modul Kolaborasi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Layout Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <div class="sidebar-title">Daftar Project / List</div>
+            <nav class="sidebar-nav" id="project-list-nav">
+                <a href="#" class="active" data-project-id="all">
+                    <span>📁</span> Semua Project
+                </a>
+                <a href="#" data-project-id="1">
+                    <span>🚀</span> Praktikum Web
+                </a>
+                <a href="#" data-project-id="2">
+                    <span>📝</span> Laporan Akhir
+                </a>
+            </nav>
+
+            <button class="btn btn-secondary btn-sm" id="btn-add-project" style="width: 100%; margin-top: 1rem;">
+                + Tambah Daftar Baru
+            </button>
+
+            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <div class="sidebar-title">Informasi Pengembang</div>
+            <div style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4;">
+                <p><b>Penanggung Jawab:</b><br>Programmer 2</p>
+                <p style="margin-top: 0.5rem;"><b>Git Branch:</b><br><code>feature/srs-02-task-management</code></p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            
+            <!-- Page Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="font-size: 1.75rem; font-weight: 700;">Kelola Tugas & Proyek</h1>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem;">Susun tugas, tentukan skala prioritas, atur tenggat waktu, dan pantau status pengerjaan.</p>
+                </div>
+            </div>
+
+            <!-- Form Buat Tugas Baru -->
+            <section class="card" style="background: linear-gradient(to right, #ffffff, #f8fafc);">
+                <h3 class="card-title" style="margin-bottom: 1rem; font-size: 1.05rem;">Buat Tugas Baru</h3>
+                <form id="form-create-task" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1rem; align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-title">Judul Tugas</label>
+                        <input type="text" id="task-input-title" class="form-control" placeholder="Tuliskan tugas apa yang perlu diselesaikan..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-priority">Tingkat Prioritas</label>
+                        <select id="task-input-priority" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-deadline">Tenggat Waktu</label>
+                        <input type="date" id="task-input-deadline" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="height: 42px;">
+                        <span>+ Tambah</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Task Management Toolbar -->
+            <div class="task-toolbar">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">Semua (<span id="count-all">0</span>)</button>
+                    <button class="filter-btn" data-filter="pending">Belum Selesai (<span id="count-pending">0</span>)</button>
+                    <button class="filter-btn" data-filter="completed">Selesai (<span id="count-completed">0</span>)</button>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <label style="font-size: 0.85rem; color: var(--color-text-muted);">Urutkan:</label>
+                    <select id="sort-select" class="form-control" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;">
+                        <option value="deadline">Berdasarkan Deadline Terdekat</option>
+                        <option value="priority">Berdasarkan Prioritas Tertinggi</option>
+                        <option value="newest">Terbaru Ditambahkan</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Task List Display -->
+            <section class="task-list" id="task-items-container">
+                <!-- Dynamically populated by task-script.js -->
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
