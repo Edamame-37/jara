@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!--
+      =============================================================================
+      File: modules/task/task-view.html
+      Module: SRS-02 Task & Project Management
+      Programmer: Programmer 2
+      Branch: fix/srs01-03
+      -----------------------------------------------------------------------------
+      Deskripsi:
+      Antarmuka pengguna (UI) bagi Pengguna untuk:
+      - [SRS-02-01] Menampilkan dan memilih daftar proyek/kategori tugas serta membuat proyek baru
+      - [SRS-02-02] Membuat tugas baru dengan judul, deskripsi, prioritas, dan tanggal deadline
+      - [SRS-02-03] Menandai status penyelesaian tugas (toggle complete)
+      - [SRS-02-04] Memfilter tugas (Semua, Belum Selesai, Selesai) dan mengurutkan
+      - [SRS-02-05] Memperbarui/edit detail isi tugas dan menghapus tugas yang tidak relevan
+      =============================================================================
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARA - Task & Project Management (SRS-02)</title>
+    <!-- Global Styling & Config -->
+    <link rel="stylesheet" href="../../public/css/global.css">
+    <!-- Module Styling -->
+    <link rel="stylesheet" href="task.css">
+    <script src="../../config/connection.js" defer></script>
+    <script src="../../public/js/app.js" defer></script>
+    <script src="task-script.js" defer></script>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <a href="../../public/index.html" class="navbar-brand">
+            <span style="font-size: 1.5rem;">⚡</span>
+            <span>JARA App</span>
+            <span class="badge badge-info">SRS-02: Task</span>
+        </a>
+        <nav>
+            <ul class="navbar-menu">
+                <li><a href="../../public/index.html">&larr; Kembali ke Dashboard Utama</a></li>
+                <li><a href="../admin/admin-view.html">Modul Admin</a></li>
+                <li><a href="task-view.html" class="active">Daftar Tugas</a></li>
+                <li><a href="../collaboration/collab-view.html">Modul Kolaborasi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Layout Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-title">Daftar Project / List [SRS-02-01]</div>
+            <nav class="sidebar-nav" id="project-list-nav">
+                <!-- Populated dynamically by task-script.js -->
+                <a href="#" class="active" data-project-id="all">
+                    <span>📁</span> Semua Project
+                </a>
+            </nav>
+
+            <button class="btn btn-secondary btn-sm" id="btn-open-project-modal" style="width: 100%; margin-top: 1rem;">
+                + Tambah Daftar Baru
+            </button>
+
+            <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <div class="sidebar-title">Informasi Modul</div>
+            <div style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4;">
+                <p><b>Fokus:</b><br>Task & Project Management</p>
+                <p style="margin-top: 0.5rem;"><b>Git Branch:</b><br><code>fix/srs01-03</code></p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            
+            <!-- Page Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="font-size: 1.75rem; font-weight: 700;" id="current-project-title">Kelola Tugas & Proyek</h1>
+                    <p style="color: var(--color-text-muted); font-size: 0.95rem;" id="current-project-desc">Susun tugas, tentukan skala prioritas, atur tenggat waktu, dan pantau status pengerjaan.</p>
+                </div>
+            </div>
+
+            <!-- Form Buat Tugas Baru [SRS-02-02] -->
+            <section class="card" style="background: linear-gradient(to right, #ffffff, #f8fafc);">
+                <h3 class="card-title" style="margin-bottom: 1rem; font-size: 1.05rem;">Buat Tugas Baru</h3>
+                <form id="form-create-task" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 1rem; align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-title">Judul Tugas</label>
+                        <input type="text" id="task-input-title" class="form-control" placeholder="Tuliskan tugas yang perlu diselesaikan..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-priority">Tingkat Prioritas</label>
+                        <select id="task-input-priority" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="task-input-deadline">Tenggat Waktu</label>
+                        <input type="date" id="task-input-deadline" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="height: 42px;">
+                        <span>+ Tambah</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Task Management Toolbar [SRS-02-04] -->
+            <div class="task-toolbar">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">Semua (<span id="count-all">0</span>)</button>
+                    <button class="filter-btn" data-filter="pending">Belum Selesai (<span id="count-pending">0</span>)</button>
+                    <button class="filter-btn" data-filter="completed">Selesai (<span id="count-completed">0</span>)</button>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <label style="font-size: 0.85rem; color: var(--color-text-muted);">Urutkan:</label>
+                    <select id="sort-select" class="form-control" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;">
+                        <option value="deadline">Berdasarkan Deadline Terdekat</option>
+                        <option value="priority">Berdasarkan Prioritas Tertinggi</option>
+                        <option value="newest">Terbaru Ditambahkan</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Task List Display [SRS-02-03, SRS-02-05] -->
+            <section class="task-list" id="task-items-container">
+                <!-- Dynamically populated by task-script.js -->
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal Tambah Proyek Baru [SRS-02-01] -->
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-weight: 700; font-size: 1.15rem;">Tambah Kategori / Proyek Baru</h3>
+                <button id="btn-close-project-modal" style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">&times;</button>
+            </div>
+            <form id="form-create-project">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="project-input-title">Nama Proyek / Daftar</label>
+                        <input type="text" id="project-input-title" class="form-control" placeholder="Contoh: Persiapan Ujian Akhir" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="project-input-desc">Deskripsi Singkat</label>
+                        <textarea id="project-input-desc" class="form-control" rows="3" placeholder="Rincian tujuan proyek ini..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-cancel-project-modal" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Proyek</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Tugas [SRS-02-05] -->
+    <div class="modal-overlay" id="edit-task-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-weight: 700; font-size: 1.15rem;">Pembaruan Isi Tugas</h3>
+                <button id="btn-close-edit-modal" style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">&times;</button>
+            </div>
+            <form id="form-edit-task">
+                <input type="hidden" id="edit-task-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label" for="edit-task-title">Judul Tugas</label>
+                        <input type="text" id="edit-task-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-task-desc">Deskripsi Tugas</label>
+                        <textarea id="edit-task-desc" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-task-priority">Prioritas</label>
+                        <select id="edit-task-priority" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-task-deadline">Tenggat Waktu (Deadline)</label>
+                        <input type="date" id="edit-task-deadline" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-cancel-edit-modal" class="btn btn-secondary">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

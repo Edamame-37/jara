@@ -1,0 +1,172 @@
+/**
+ * =============================================================================
+ * File: modules/collaboration/collab.css
+ * Module: SRS-03 Collaboration & Progress Tracking
+ * Programmer: Programmer 3
+ * Branch: feature/srs-03-collaboration
+ * -----------------------------------------------------------------------------
+ * Deskripsi:
+ * Stylesheet khusus untuk modul kolaborasi dan pemantauan progres:
+ * - Komponen Progress Tracker Visual (Circular / Bar Progress)
+ * - Kartu Manajemen Anggota Kolaborator (Avatar, Role, Status)
+ * - Formulir / Modal Undangan Anggota (Invite Member Dialog)
+ * - Feed Aktivitas Kolaborasi (Activity Log)
+ * =============================================================================
+ */
+
+/* Progress Overview Card */
+.progress-hero-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    color: #ffffff;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.progress-info {
+    flex: 1;
+}
+
+.progress-info h2 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.progress-info p {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+}
+
+.progress-large-bar {
+    width: 100%;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-large-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease-out;
+}
+
+.progress-metric-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+}
+
+/* Circular Metric / Highlight */
+.progress-percentage-display {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #38bdf8;
+    line-height: 1;
+    text-align: center;
+}
+
+.progress-percentage-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Members Grid */
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.member-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: var(--transition-base);
+}
+
+.member-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.member-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: #fef3c7;
+    color: #92400e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.member-avatar.owner {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.member-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+}
+
+.member-role {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+/* Activity Log Timeline */
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.activity-icon {
+    font-size: 1.1rem;
+}
