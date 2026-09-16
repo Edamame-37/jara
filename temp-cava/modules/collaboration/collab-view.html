@@ -6,15 +6,15 @@
       File: modules/collaboration/collab-view.html
       Module: SRS-03 Collaboration & Progress Tracking
       Programmer: Programmer 3
-      Branch: feature/srs-03-collaboration
+      Branch: fix/srs01-03
       -----------------------------------------------------------------------------
       Deskripsi:
-      Antarmuka pengguna (UI) bagi Pemilik Daftar (Project Owner) untuk:
-      - Memantau persentase progres penyelesaian tugas secara real-time
-      - Mengundang/menambah anggota baru ke dalam daftar tugas (kolaborasi tim)
-      - Mengatur hak akses anggota (Editor / Viewer)
-      - Menghapus anggota dari proyek
-      - Melihat riwayat aktivitas kolaboratif tim
+      Antarmuka pengguna (UI) bagi Pemilik Daftar (Project Owner) & Kolaborator:
+      - [SRS-03-01] Mengundang anggota kolaborasi baru via email
+      - [SRS-03-02] Menampilkan anggota beserta perannya (Owner, Editor, Viewer) & mengeluarkan anggota
+      - [SRS-03-03] Menghitung kalkulasi persentase progres secara dinamis: (Tugas Selesai / Total Tugas) * 100%
+      - [SRS-03-04] Menampilkan progress bar interaktif dan status pencapaian target
+      - [SRS-03-05] Menampilkan feed log riwayat aktivitas tim terkini secara real-time
       =============================================================================
     -->
     <meta charset="UTF-8">
@@ -52,51 +52,43 @@
         
         <!-- Sidebar -->
         <aside class="app-sidebar">
-            <div class="sidebar-title">Daftar Tim & Proyek</div>
-            <nav class="sidebar-nav">
-                <a href="collab-view.html" class="active">
-                    <span>👥</span> Anggota Proyek
-                </a>
-                <a href="#activity-section">
-                    <span>📈</span> Pantau Progres
-                </a>
-                <a href="#">
-                    <span>📨</span> Undangan Tertunda
-                </a>
+            <div class="sidebar-title">Pilih Proyek Kolaborasi</div>
+            <nav class="sidebar-nav" id="collab-project-nav">
+                <!-- Populated dynamically by collab-script.js -->
             </nav>
 
             <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--color-border);">
 
-            <div class="sidebar-title">Informasi Pengembang</div>
+            <div class="sidebar-title">Informasi Modul</div>
             <div style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.4;">
-                <p><b>Penanggung Jawab:</b><br>Programmer 3</p>
-                <p style="margin-top: 0.5rem;"><b>Git Branch:</b><br><code>feature/srs-03-collaboration</code></p>
+                <p><b>Fokus:</b><br>Collaboration & Progress Tracking</p>
+                <p style="margin-top: 0.5rem;"><b>Git Branch:</b><br><code>fix/srs01-03</code></p>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="app-main">
             
-            <!-- Hero Progress Card -->
+            <!-- Hero Progress Card [SRS-03-03 & SRS-03-04] -->
             <section class="progress-hero-card">
                 <div class="progress-info">
-                    <h2>Progres Proyek: Tim Pengembangan JARA</h2>
-                    <p>Pemantauan persentase penyelesaian tugas secara real-time antar seluruh anggota yang terlibat.</p>
+                    <h2 id="collab-project-title">Progres Proyek: Tim Pengembangan JARA</h2>
+                    <p id="collab-project-desc">Pemantauan persentase penyelesaian tugas secara real-time antar seluruh anggota yang terlibat.</p>
                     <div class="progress-large-bar">
-                        <div class="progress-large-fill" id="collab-progress-fill" style="width: 75%;"></div>
+                        <div class="progress-large-fill" id="collab-progress-fill" style="width: 0%;"></div>
                     </div>
                     <div class="progress-metric-row">
-                        <span id="collab-metric-tasks">6 dari 8 tugas selesai</span>
-                        <span id="collab-metric-status">Status: Sesuai Target</span>
+                        <span id="collab-metric-tasks">0 dari 0 tugas selesai</span>
+                        <span id="collab-metric-status">Status: Memuat...</span>
                     </div>
                 </div>
                 <div>
-                    <div class="progress-percentage-display" id="collab-percentage-text">75%</div>
+                    <div class="progress-percentage-display" id="collab-percentage-text">0%</div>
                     <div class="progress-percentage-label">Penyelesaian</div>
                 </div>
             </section>
 
-            <!-- Members Section -->
+            <!-- Members Section [SRS-03-01 & SRS-03-02] -->
             <section class="card">
                 <div class="card-header">
                     <div>
@@ -115,7 +107,7 @@
                 </div>
             </section>
 
-            <!-- Activity Log -->
+            <!-- Activity Log Feed [SRS-03-05] -->
             <section class="card" id="activity-section">
                 <div class="card-header">
                     <h3 class="card-title">Log Aktivitas Kolaborasi Terkini</h3>
@@ -129,15 +121,15 @@
         </main>
     </div>
 
-    <!-- Modal Undang Anggota -->
-    <div class="modal-overlay" id="invite-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000;">
-        <div class="modal-dialog" style="background: #ffffff; width: 100%; max-width: 480px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); overflow: hidden;">
-            <div class="modal-header" style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-weight: 700; font-size: 1.15rem;">Undang Anggota Baru</h3>
+    <!-- Modal Undang Anggota [SRS-03-01] -->
+    <div class="modal-overlay" id="invite-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 style="font-weight: 700; font-size: 1.15rem;">Undang Anggota Kolaborator Baru</h3>
                 <button id="btn-close-invite-modal" style="background: none; border: none; font-size: 1.25rem; cursor: pointer;">&times;</button>
             </div>
             <form id="form-invite-member">
-                <div class="modal-body" style="padding: 1.5rem;">
+                <div class="modal-body">
                     <div class="form-group">
                         <label class="form-label" for="invite-input-name">Nama Anggota</label>
                         <input type="text" id="invite-input-name" class="form-control" placeholder="Contoh: Sarah Oktavia" required>
@@ -151,10 +143,11 @@
                         <select id="invite-input-role" class="form-control">
                             <option value="Editor">Editor (Dapat menambah & menyelesaikan tugas)</option>
                             <option value="Viewer">Viewer (Hanya dapat memantau progres)</option>
+                            <option value="Owner">Owner (Hak penuh kepemilikan proyek)</option>
                         </select>
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: 1rem 1.5rem; background: var(--color-bg-main); border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <div class="modal-footer">
                     <button type="button" id="btn-cancel-invite-modal" class="btn btn-secondary">Batal</button>
                     <button type="submit" class="btn btn-primary">Kirim Undangan</button>
                 </div>
