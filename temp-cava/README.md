@@ -1,58 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# JARA — Advanced Todo List & Collaboration Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web JARA (Advanced Todo List & Collaboration System) adalah platform manajemen tugas modern berbasis web yang mengadopsi arsitektur terstruktur dan didukung oleh kerangka kerja Laravel. Sistem ini dirancang untuk memfasilitasi manajemen proyek perseorangan maupun kolaboratif secara terukur, teratur, dan efisien.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 1. Spesifikasi Kebutuhan Perangkat Lunak (Software Requirements Specification - SRS)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Bagian ini memuat seluruh spesifikasi sistem yang harus dibangun. Seluruh pengembangan fitur bersifat Fullstack. Tidak ada pembagian khusus antara sistem antarmuka dan sistem inti; setiap pengembangan pada fitur spesifik wajib dikembangkan secara utuh oleh satu kesatuan alur dari antarmuka hingga basis data.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### SRS-01: Admin & User Management
+Tujuan: Menyediakan mekanisme kontrol penuh bagi administrator dalam mengelola identitas pengguna, hak akses, dan menjaga integritas data akun sistem.
+1. SRS-01-01 (Autentikasi & Autorisasi): Sistem memverifikasi login dan membatasi akses modul manajemen hanya untuk akun dengan peran administrator.
+2. SRS-01-02 (Tabel Data Pengguna): Menampilkan seluruh akun yang terdaftar dalam format tabel interaktif dilengkapi fitur pencarian berdasarkan nama dan email.
+3. SRS-01-03 (Pendaftaran Akun Baru): Administrator dapat menambahkan akun baru dengan memasukkan nama lengkap, email unik, peran, serta kata sandi bawaan.
+4. SRS-01-04 (Pengelolaan Peran & Status): Administrator dapat mengubah peran pengguna sewaktu-waktu dan menonaktifkan akun yang melanggar ketentuan.
+5. SRS-01-05 (Penghapusan Akun): Administrator dapat menghapus akun pengguna dari sistem dengan konfirmasi dialog pengaman untuk mencegah kesalahan fatal.
 
-## Learning Laravel
+### SRS-02: Task & Project Management
+Tujuan: Memberikan kemampuan produktivitas personal kepada pengguna untuk mengorganisir pekerjaan, menetapkan prioritas, dan memantau tenggat waktu.
+1. SRS-02-01 (Pengelompokan Daftar / Project List): Pengguna dapat membuat beberapa kategori atau daftar proyek terpisah.
+2. SRS-02-02 (Penciptaan Tugas / Task Creation): Pengguna dapat menambahkan tugas ke dalam daftar yang mencakup judul, deskripsi, skala prioritas, dan tenggat waktu.
+3. SRS-02-03 (Penyelesaian Tugas): Pengguna dapat menandai tugas sebagai selesai melalui kotak centang interaktif.
+4. SRS-02-04 (Penyortiran & Pemfilteran): Tugas dapat disaring berdasarkan status dan diurutkan berdasarkan tanggal tenggat terdekat atau prioritas tertinggi.
+5. SRS-02-05 (Pemeliharaan Tugas): Pengguna dapat memperbarui isi tugas dan menghapus tugas yang tidak lagi relevan.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### SRS-03: Collaboration & Progress Tracking
+Tujuan: Memungkinkan kerja sama tim dalam menyelesaikan sekumpulan tugas dan memberikan visibilitas metrik progres ketercapaian target secara akurat.
+1. SRS-03-01 (Undangan Kolaborator): Pemilik daftar dapat mengundang pengguna lain ke dalam proyeknya menggunakan alamat email terdaftar.
+2. SRS-03-02 (Tingkat Hak Akses Kolaborasi):
+   - Pemilik: Memiliki hak penuh mengundang atau mengeluarkan anggota dan menghapus proyek.
+   - Penyunting: Dapat membuat tugas baru, mengedit, dan menyelesaikan tugas.
+   - Pemantau: Hanya dapat membaca daftar tugas dan melihat perkembangan progres.
+3. SRS-03-03 (Kalkulasi Progres Otomatis): Sistem menghitung persentase progres secara dinamis berdasarkan formula standar (Tugas Selesai / Total Seluruh Tugas) x 100%.
+4. SRS-03-04 (Visualisasi Progres): Menampilkan status pencapaian melalui indikator progres dinamis dan status ketercapaian (Sesuai Target, Sedang Dikerjakan, Terlambat).
+5. SRS-03-05 (Log Aktivitas Bersama): Menampilkan rekam jejak aktivitas terkini dari seluruh anggota proyek.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### SRS-04: Ownership, Security & Transaction Management
+Tujuan: Menjamin integritas data saat modifikasi atau penghapusan proyek, serta melindungi sistem dari akses yang tidak berwenang maupun serangan injeksi basis data.
+1. SRS-04-01 (Otomatisasi Kepemilikan Proyek): Sistem secara otomatis menetapkan pengguna pembuat daftar tugas sebagai Pemilik tanpa memerlukan masukan tambahan dari pengguna.
+2. SRS-04-02 (Penghapusan Atomik & Bertingkat): Penghapusan daftar proyek akan memicu penghapusan seluruh tugas dan anggota terkait secara atomik dalam satu transaksi basis data. Apabila terdapat kegagalan, seluruh proses akan dibatalkan.
+3. SRS-04-03 (Otorisasi Akses Ketat): Sistem menolak permintaan modifikasi dan penghapusan proyek dari pengguna selain Pemilik.
+4. SRS-04-04 (Keamanan & Sanitasi Masukan): Seluruh masukan dari pengguna wajib divalidasi secara ketat dan diproses menggunakan kueri terparameterisasi guna mencegah bahaya keamanan.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 2. Apa yang Harus Dilakukan Programmer Sekarang
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Untuk memulai pengembangan aplikasi, seluruh Programmer diwajibkan untuk menjalankan langkah-langkah praktis di bawah ini:
 
-```bash
-composer require laravel/boost --dev
+1. **Inisialisasi Lingkungan Kerja (Environment Setup)**
+   - Pastikan Anda telah melakukan kloning pada repositori proyek ini.
+   - Eksekusi instalasi dependensi menggunakan utilitas manajemen paket standar (contoh: `composer install` dan `npm install`).
+   - Gandakan berkas konfigurasi `.env.example` menjadi `.env` lalu hasilkan kunci aplikasi (contoh: melalui perintah `php artisan key:generate`).
+   - Lakukan migrasi awal pada basis data lokal Anda.
 
-php artisan boost:install
-```
+2. **Perencanaan Arsitektur Implementasi**
+   - Segera amati Spesifikasi Kebutuhan Perangkat Lunak (SRS) yang tercantum pada dokumen ini.
+   - Sebelum menyentuh kode pemrograman, Anda **wajib** menyusun rencana implementasi secara menyeluruh (meliputi kerangka tampilan antarmuka, struktur tabel basis data, rute aplikasi, dan arsitektur validasi fungsional).
+   - Pastikan Anda mendesain skema relasi antar entitas (Pengguna, Proyek, Tugas) yang diamanatkan dalam SRS-01 hingga SRS-04 secara komprehensif.
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+3. **Pembuatan Cabang (Branching)**
+   - Buat cabang pengembangan baru di lingkungan lokal Anda berdasarkan spesifikasi SRS atau fungsionalitas utama yang disepakati untuk dikerjakan.
+   - Jangan pernah melakukan penulisan dan penambahan kode (commit) secara langsung di dalam cabang utama (`main`).
 
-## Contributing
+4. **Eksekusi Pengembangan (Fullstack Development)**
+   - Mulailah membangun kerangka inti pengendalian data, model relasional, serta berkas migrasi basis data.
+   - Karena setiap pekerjaan bersifat *Fullstack*, Anda memiliki tanggung jawab penuh untuk merancang dan membangun tampilan antarmuka yang fungsional sekaligus.
+   - Pastikan seluruh fungsionalitas memiliki lapisan perlindungan yang kokoh, baik dari sisi otorisasi (lapisan penengah) maupun keamanan kueri.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Pengujian dan Penyelesaian Pekerjaan**
+   - Setelah implementasi selesai, pastikan Anda memverifikasi ketiadaan kesalahan sintaksis atau kelalaian logika sistem.
+   - Tulis komit menggunakan pesan konvensional yang menjelaskan struktur fitur.
+   - Kirimkan kode Anda ke repositori asal melalui pengajuan permohonan tarik (Pull Request) guna ditinjau bersama secara tim.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+Dikembangkan dengan dedikasi tinggi untuk penerapan standar profesional Rekayasa Perangkat Lunak.
