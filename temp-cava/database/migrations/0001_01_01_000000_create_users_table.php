@@ -17,6 +17,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            /**
+             * [SRS-01-01 & SRS-01-04] Peran Pengguna (Role):
+             * Mendefinisikan tingkat hak akses sistem: 'admin' (akses penuh modul manajemen)
+             * atau 'member' (pengguna reguler sistem).
+             */
+            $table->enum('role', ['admin', 'member'])->default('member');
+            /**
+             * [SRS-01-04] Status Akun:
+             * 'active' (dapat beroperasi) atau 'inactive' (dinonaktifkan oleh administrator).
+             */
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });
