@@ -63,11 +63,10 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'owner_id' => ['nullable', 'exists:users,id'],
         ]);
 
-        // Default owner: ID 1 atau user pertama jika tidak dikirimkan
-        $ownerId = $validated['owner_id'] ?? User::first()->id ?? 1;
+        // Kepemilikan otomatis berdasarkan user yang login (SRS-04-01)
+        $ownerId = auth()->id();
 
         $project = DB::transaction(function () use ($validated, $ownerId) {
             $proj = Project::create([
@@ -137,6 +136,11 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $projectTitle = $project->title;
+
+        // Pengecekan otorisasi: hanya owner yang bisa menghapus (SRS-04-03)
+        if ($project->owner_id !== auth()->id() && auth()->user()->role !== 'Admin') {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
 
         DB::transaction(function () use ($project) {
             $project->delete();
