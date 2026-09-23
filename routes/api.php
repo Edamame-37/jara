@@ -22,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 // =============================================================================
 // [SRS-01] Admin & User Management Endpoints
 // =============================================================================
-Route::prefix('admin')->group(function () {
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('admin')->group(function () {
     // [SRS-01-02] Menampilkan daftar pengguna terdaftar (dengan fitur pencarian)
     Route::get('/users', [UserController::class, 'index']);
 
@@ -79,4 +81,6 @@ Route::prefix('projects/{projectId}')->group(function () {
 
     // [SRS-03-05] Feed rekam jejak log aktivitas kolaborasi terkini
     Route::get('/activities', [CollaborationController::class, 'activities']);
+});
+
 });
